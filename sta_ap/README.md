@@ -1,6 +1,9 @@
 # WiFi station example
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+ESP32 Wi-Fi AP+STA DEMO
+
+IDF Version : release/v4.2
+IDF Commit : 2532ddd9f447f6fab02bc2d1654534a7621e033a
 
 
 ## How to use example
