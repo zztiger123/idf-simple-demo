@@ -2,8 +2,8 @@
 
 ESP32 Wi-Fi AP+STA DEMO
 
-IDF Version : release/v4.2
-IDF Commit : 2532ddd9f447f6fab02bc2d1654534a7621e033a
+IDF Version : release/v4.2 (tag: v4.2)
+IDF Commit : c40f2590bf759ff60ef122afa79b4ec04e7633d2
 
 
 ## How to use example

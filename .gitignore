@@ -1,7 +1,7 @@
 # Example project files
-**/sdkconfig
-**/sdkconfig.old
-**/build
+example/**/sdkconfig
+example/**/sdkconfig.old
+example/**/build
 
 # VS Code Settings
 .vscode/
