@@ -1,0 +1,62 @@
+menu "Example Connection Configuration"
+
+    config EXAMPLE_CONNECT_WIFI
+        bool "connect using WiFi interface"
+        default y
+        help
+            Protocol examples can use Wi-Fi and/or Ethernet to connect to the network.
+            Choose this option to connect with WiFi
+
+    if EXAMPLE_CONNECT_WIFI
+        config ESP_WIFI_SSID
+            string "WiFi SSID"
+            default "myssid"
+            help
+                SSID (network name) for the example to connect to.
+
+        config ESP_WIFI_PASSWORD
+            string "WiFi Password"
+            default "mypassword"
+            help
+                WiFi password (WPA or WPA2) for the example to use.
+
+        config ESP_MAXIMUM_RETRY
+            int "Maximum retry"
+            default 5
+            help
+                Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+        endif
+
+    config ENABLE_STATIC_IP
+        bool "enable using static ip"
+        default n
+        help
+            Using ststic ip to replace the dynamic ip
+
+    if ENABLE_STATIC_IP
+        config STATIC_IP_ADDR
+            string "STATIC IP ADDR"
+            default "192.168.1.102"
+            help
+                static ip addr for the example.
+
+        config STATIC_IP_GATEWAY_ADDR
+            string "STATIC IP GATEWAY ADDR"
+            default "192.168.1.1"
+            help
+                static ip gateway addr for the example.
+        
+        config STATIC_IP_NETMASK_ADDR
+            string "STATIC IP NETMASK ADDR"
+            default "255.255.255.0"
+            help
+                static ip gateway addr for the example.
+        
+        config DNS_ADDR
+            string "DNS ADDR"
+            default "8.8.8.8"
+            help
+                dns addr for the example.
+    endif
+
+endmenu
