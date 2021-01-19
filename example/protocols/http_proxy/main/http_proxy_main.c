@@ -28,7 +28,7 @@
 #define WEB_PATH "/"
 
 /* Constants that aren't configurable in menuconfig */
-#define ORIG_WEB_SERVER "http://products.espressif.com:8000/#/"
+#define ORIG_WEB_SERVER "http://products.espressif.com:8000/#/product-selector?language=en"
 #define ORIG_WEB_PORT "80"
 #define ORIG_WEB_PATH "/"
 
