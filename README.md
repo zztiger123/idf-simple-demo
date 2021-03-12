@@ -1,3 +1,4 @@
 # ESP IDF SIMPLE DEMO
 
-A series of simple ESP demos
+Some simple ESP-IDF demo
+
