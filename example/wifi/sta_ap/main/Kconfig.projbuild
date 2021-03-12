@@ -1,0 +1,29 @@
+menu "Example Configuration"
+
+    config ESP_WIFI_STA_SSID
+        string "WiFi STA_SSID"
+        default "mystassid"
+        help
+            SSID (network name) for the example to connect to.
+
+    config ESP_WIFI_STA_PASSWORD
+        string "WiFi_STA_Password"
+        default "mypassword"
+        help
+            WiFi password (WPA or WPA2) for the example to use.
+
+    config ESP_WIFI_AP_SSID
+        string "WiFi AP_SSID"
+        default "myapssid"
+        help
+            SSID (network name) for the example to connect to.
+
+    config ESP_WIFI_AP_PASSWORD
+        string "WiFi_AP_Password"
+        default "mypassword"
+        help
+            WiFi password (WPA or WPA2) for the example to use.
+
+
+
+endmenu
