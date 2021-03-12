@@ -127,8 +127,6 @@ void wifi_init_sta()
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
 
-    ESP_ERROR_CHECK(esp_wifi_start() );
-
     wifi_country_t country1 = {
         .cc="USA", 
         .schan=1,
@@ -137,6 +135,8 @@ void wifi_init_sta()
     };
 
     ESP_ERROR_CHECK(esp_wifi_set_country(&country1));
+
+    ESP_ERROR_CHECK(esp_wifi_start() );
 
 }
 
