@@ -80,7 +80,7 @@ void wifi_init_softap(void)
     
     /*write */
     IP4_ADDR(&local_ip.ip, 10, 0 , 0, 1);
-    IP4_ADDR(&local_ip.gw, 10, 0 , 0, 0);
+    IP4_ADDR(&local_ip.gw, 10, 0 , 0, 1);
     IP4_ADDR(&local_ip.netmask, 255, 255 , 255, 0);
     /*print set IP information*/
     ESP_LOGI(TAG,"set ip:"IPSTR"\n",IP2STR(&local_ip.ip));
