@@ -160,7 +160,7 @@ void mqtt_start(void)
 
     wifi_init_sta();
 
-    mqtt_app_start();
+    //mqtt_app_start();
 
     
 }

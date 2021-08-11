@@ -1,3 +1,3 @@
-idf_component_register(SRCS "gatts_demo.c"
+idf_component_register(SRCS "ble50_sec_gatts_demo.c"
                     INCLUDE_DIRS "."
                     REQUIRES nvs_flash bt)

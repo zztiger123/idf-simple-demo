@@ -31,7 +31,7 @@
 #include "freertos/semphr.h"
 
 
-#include "gatts_demo.h"
+#include "ble50_sec_gatts_demo.h"
 #include "mqtt_test.h"
 
 void app_main(void)

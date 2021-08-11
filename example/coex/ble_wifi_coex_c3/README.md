@@ -1,4 +1,4 @@
-| Supported Targets | ESP32-C3 |
+| Supported Targets | ESP32 |
 | ----------------- | ----- |
 
 ESP-IDF ble wifi coex Demo
