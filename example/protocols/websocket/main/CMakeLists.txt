@@ -1,0 +1,3 @@
+idf_component_register(SRCS "websocket_example.c"
+                    INCLUDE_DIRS "."
+                    EMBED_TXTFILES test_aerogarden_com.pem)
