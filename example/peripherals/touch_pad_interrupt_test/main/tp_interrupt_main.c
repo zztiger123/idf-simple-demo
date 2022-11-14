@@ -20,6 +20,7 @@
 #include "hal/gpio_types.h"
 #include "driver/gpio.h"
 
+
 #include "rom/ets_sys.h"
 
 #define GPIO_NUM_35 35
@@ -38,25 +39,23 @@ typedef struct touch_msg
 } touch_event_t;
 
 #define TOUCH_BUTTON_NUM 3
-#define TOUCH_BUTTON_WATERPROOF_ENABLE 0
 #define TOUCH_BUTTON_DENOISE_ENABLE 1
-#define TOUCH_CHANGE_CONFIG 0
 
+//触摸管脚配置
 static const touch_pad_t button[TOUCH_BUTTON_NUM] = {
 
-    TOUCH_PAD_NUM8,  // 'MENU' button.
-    TOUCH_PAD_NUM10, // 'BACK' button.
-    TOUCH_PAD_NUM12, // Guard ring for waterproof design.
-    // If this pad be touched, other pads no response.
+    TOUCH_PAD_NUM8,
+    TOUCH_PAD_NUM10,
+    TOUCH_PAD_NUM12,
 };
 
+// LED 管脚初始化设置
 void led_init(void)
 
 {
-
     gpio_config_t io_conf = {};
     // set as output mode
-    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.mode = GPIO_MODE_INPUT_OUTPUT;
     // bit mask of the pins that you want to set,e.g.GPIO18/19
     io_conf.pin_bit_mask = ((1ULL << GPIO_NUM_33) | (1ULL << GPIO_NUM_34) | (1ULL << GPIO_NUM_35));
     io_conf.pull_down_en = 1;
@@ -75,16 +74,13 @@ void led_init(void)
 
     // zero-initialize the config structure.
 }
-/*
- * Touch threshold. The threshold determines the sensitivity of the touch.
- * This threshold is derived by testing changes in readings from different touch channels.
- * If (raw_data - benchmark) > benchmark * threshold, the pad be activated.
- * If (raw_data - benchmark) < benchmark * threshold, the pad be inactivated.
- */
+
+
+//触摸管脚对应的变化率的设置
 static const float button_threshold[TOUCH_BUTTON_NUM] = {
-    0.04, // 20%.
-    0.04, // 20%.
-    0.04, // 20%.
+    0.034, // 3.4%.
+    0.036, // 3.6%.
+    0.032, // 3.2%.
 
 };
 
@@ -92,6 +88,7 @@ static const float button_threshold[TOUCH_BUTTON_NUM] = {
   Handle an interrupt triggered when a pad is touched.
   Recognize what pad has been touched and save it in a table.
  */
+//触摸按键触发的中断函数
 static void touchsensor_interrupt_cb(void *arg)
 {
     int task_awoken = pdFALSE;
@@ -108,6 +105,7 @@ static void touchsensor_interrupt_cb(void *arg)
     }
 }
 
+//触摸按键实时获取的基准值
 static void tp_example_set_thresholds(void)
 {
     uint32_t touch_value;
@@ -122,21 +120,25 @@ static void tp_example_set_thresholds(void)
     }
 }
 
+//滤波器参数设置
 static void touchsensor_filter_set(touch_filter_mode_t mode)
 {
     /* Filter function */
     touch_filter_config_t filter_info = {
         .mode = mode,      // Test jitter and filter 1/4.
-        .debounce_cnt = 1, // 1 time count.
+        .debounce_cnt = 2, // 1 time count.
         .noise_thr = 0,    // 50%
         .jitter_step = 4,  // use for jitter mode.
-        .smh_lvl = TOUCH_PAD_SMOOTH_IIR_2,
+        .smh_lvl = TOUCH_PAD_SMOOTH_IIR_4,
     };
     touch_pad_filter_set_config(&filter_info);
     touch_pad_filter_enable();
     ESP_LOGI(TAG, "touch pad filter init");
 }
 
+uint32_t count = 0;
+
+//触摸任务-应用
 static void tp_example_read_task(void *pvParameter)
 {
     touch_event_t evt = {0};
@@ -152,24 +154,26 @@ static void tp_example_read_task(void *pvParameter)
         {
             continue;
         }
+        //触摸按键活跃状态
         if (evt.intr_mask & TOUCH_PAD_INTR_MASK_ACTIVE)
         {
 
             if (evt.pad_num == button[2])
             {
-
+                // 设置按键 Touch 12 开 B 灯、关 B 灯
                 ESP_LOGW(TAG, "TouchSensor [%" PRIu32 "] be activated, enter guard mode", evt.pad_num);
                 /* if guard pad be touched, other pads no response. */
 
                 ESP_LOGI(TAG, "TouchSensor [%" PRIu32 "] be activated, status mask 0x%" PRIu32 "", evt.pad_num, evt.pad_status);
 
                 printf("pad 12 anxia anxia anxia anxia\n");
-                gpio_set_level(GPIO_NUM_35, 1);
+
+                gpio_set_level(GPIO_NUM_35, (++count) % 2);
             }
 
             if (evt.pad_num == button[1])
             {
-
+                // 设置按键 Touch 10 按下 G 灯亮、松手 G 灯灭
                 ESP_LOGW(TAG, "TouchSensor [%" PRIu32 "] be activated, enter guard mode", evt.pad_num);
                 /* if guard pad be touched, other pads no response. */
 
@@ -177,21 +181,25 @@ static void tp_example_read_task(void *pvParameter)
 
                 printf("pad 10 anxia anxia anxia anxia \n");
                 gpio_set_level(GPIO_NUM_34, 1);
+             
             }
 
             if (evt.pad_num == button[0])
             {
-
+                 // 设置按键 Touch 8 按下 R 灯亮、松手 R 灯灭
                 ESP_LOGW(TAG, "TouchSensor [%" PRIu32 "] be activated, enter guard mode", evt.pad_num);
                 /* if guard pad be touched, other pads no response. */
 
                 ESP_LOGI(TAG, "TouchSensor [%" PRIu32 "] be activated, status mask 0x%" PRIu32 "", evt.pad_num, evt.pad_status);
 
                 printf("pad 88888888888888888888  anxia anxia anxia anxia\n");
+             
                 gpio_set_level(GPIO_NUM_33, 1);
+              
+          
             }
         }
-
+        //触摸按键非活跃状态
         if (evt.intr_mask & TOUCH_PAD_INTR_MASK_INACTIVE)
         {
             /* if guard pad be touched, other pads no response. */
@@ -201,8 +209,6 @@ static void tp_example_read_task(void *pvParameter)
 
                 ESP_LOGI(TAG, "TouchSensor [%" PRIu32 "] be inactivated, status mask 0x%" PRIu32, evt.pad_num, evt.pad_status);
                 printf("pad 12 pad 12 pad 12 songshou  songhsou songshou  songhsou songshou  songhson");
-
-                gpio_set_level(GPIO_NUM_35, 0);
             }
 
             if (evt.pad_num == button[1])
@@ -218,7 +224,11 @@ static void tp_example_read_task(void *pvParameter)
 
                 ESP_LOGI(TAG, "TouchSensor [%" PRIu32 "] be inactivated, status mask 0x%" PRIu32, evt.pad_num, evt.pad_status);
                 printf(" pad 88888888888888 songshou  songshou songshou songshou  songshou songshou\n");
+            
+            
                 gpio_set_level(GPIO_NUM_33, 0);
+          
+           
             }
         }
 
